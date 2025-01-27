@@ -66,13 +66,12 @@ public class EveIdentityProvider extends AbstractOAuth2IdentityProvider<EveIdent
 
     @Override
     protected BrokeredIdentityContext extractIdentityFromProfile(EventBuilder event, JsonNode profile) {
-        BrokeredIdentityContext user = new BrokeredIdentityContext(getJsonProperty(profile, "CharacterID"));
+        BrokeredIdentityContext user = new BrokeredIdentityContext(getJsonProperty(profile, "CharacterID"), getConfig());
         
         user.setUsername(getJsonProperty(profile, "CharacterName").strip());
         user.setFirstName(getJsonProperty(profile, "CharacterName"));
         user.setUserAttribute("corporation_id", getJsonProperty(profile, "corporation_id"));
         user.setUserAttribute("alliance_id", getJsonProperty(profile, "alliance_id"));
-        user.setIdpConfig(getConfig());
         user.setIdp(this);
 
         AbstractJsonUserAttributeMapper.storeUserProfileForMapper(user, profile, getConfig().getAlias());
