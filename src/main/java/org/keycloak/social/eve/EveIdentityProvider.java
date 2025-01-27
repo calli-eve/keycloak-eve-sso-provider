@@ -16,10 +16,6 @@
  */
 
 package org.keycloak.social.eve;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.jboss.logging.Logger;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
@@ -29,6 +25,9 @@ import org.keycloak.broker.provider.util.SimpleHttp;
 import org.keycloak.broker.social.SocialIdentityProvider;
 import org.keycloak.events.EventBuilder;
 import org.keycloak.models.KeycloakSession;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Modified from Discord extension by:
@@ -100,7 +99,9 @@ public class EveIdentityProvider extends AbstractOAuth2IdentityProvider<EveIdent
         profile.put("CharacterID", getJsonProperty(verify, "CharacterID"));
         profile.put("CharacterName", getJsonProperty(verify, "CharacterName"));
         profile.put("corporation_id", affiliation.get(0).get("corporation_id").asText());
-        profile.put("alliance_id", affiliation.get(0).get("alliance_id").asText());
+        if (affiliation.get(0).has("alliance_id")) { 
+            profile.put("alliance_id", affiliation.get(0).get("alliance_id").asText());
+        }
         log.debug(profile);
         return extractIdentityFromProfile(null, profile);
     }
